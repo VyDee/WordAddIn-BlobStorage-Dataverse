@@ -7,27 +7,46 @@
 
 Office.onReady((info) => {
   if (info.host === Office.HostType.Word) {
-    document.getElementById("sideload-msg").style.display = "none";
-    document.getElementById("app-body").style.display = "flex";
-    document.getElementById("run").onclick = run;
+    //document.getElementById("sideload-msg").style.display = "none";
+    //document.getElementById("app-body").style.display = "flex";
+    document.getElementById("searchButton").onclick = run;
   }
 });
-
+/*<div class="col-lg-4 col-md-12 mb-4 mb-lg-0 bg-image hover-overlay ripple shadow-1-strong rounded" data-ripple-color="light">
+    <img
+      src="https://mdbcdn.b-cdn.net/img/screens/yt/screen-video-1.webp"
+      class="w-100"
+    />
+  </div> */
 export async function run() {
   return Word.run(async (context) => {
+    var componentOrderID = "" + document.getElementById("componentOrderIDInput").value;
     // insert a paragraph at the end of the document.
-    var photoUrls = await getPhotosUrl("203");
+    var photoUrls = await getPhotosUrl(componentOrderID);
     const outElem = document.querySelector(".gallery");
+    outElem.innerHTML = "";
 
     photoUrls.forEach(function (path) {
+      const imgDiv = document.createElement("div");
+      imgDiv.classList.add(
+        "col-lg-4",
+        "col-md-12",
+        "mb-4",
+        "mb-lg-0",
+        "bg-image",
+        "hover-overlay",
+        "ripple",
+        "shadow-1-strong",
+        "rounded"
+      );
       const img = document.createElement("img");
       img.src = path;
-      img.width = 100;
-      img.length = 100;
+      img.classList.add("w-100", "h-100");
       img.onclick = function () {
         insertImage(this.src);
       };
-      outElem.appendChild(img);
+      imgDiv.appendChild(img);
+      outElem.appendChild(imgDiv);
     });
 
     await context.sync();
