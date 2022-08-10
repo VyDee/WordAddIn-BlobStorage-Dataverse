@@ -4,7 +4,6 @@
  */
 
 /* global document, Office, Word */
-//import "dotenv/config";
 
 Office.onReady((info) => {
   if (info.host === Office.HostType.Word) {
@@ -70,13 +69,10 @@ export async function insertImage(src) {
 
 export async function getPhotosUrl(compOrID) {
   var request = new XMLHttpRequest();
-  // const dotenv = require("dotenv");
-  // dotenv.config();
-  // console.log(`RENEW key is ${process.env.RENEW_FA_KEY}`);
 
-  var apiUrl = "Your Azure API Url";
+  var apiUrl = process.env.RENEW_FA_API_URL;
   var param = "componentOrderID=" + compOrID;
-  var functionKey = "Your Azure Function Key";
+  var functionKey = process.env.RENEW_FA_KEY;
   var url = apiUrl + "?" + functionKey + "&" + param;
 
   request.open("GET", url, false);
