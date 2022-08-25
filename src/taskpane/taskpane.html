@@ -29,7 +29,7 @@
         <div class="container">
           <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
             <span class="fs-4"><b>RENEW Pictures Add In</b></span>
-    
+            <br>
             <form class="col-12 col-lg-auto mb-3 mb-lg-0 me-lg-3">
               <input type="text" class="form-control form-control-dark" placeholder="Enter a component order ID" aria-label="Component Order ID" id="componentOrderIDInput">
             </form>
@@ -42,15 +42,23 @@
       </header>
       <br>
       <div class="container">
+        <div class="justify-content-center" id="loadingSpinner" style="display:none; ">
+          <div class="spinner-border" role="status">
+          </div>
+          <p class="ms-2">Loading</p>
+        </div>
+          
           <!-- Section: Images -->
           <section class="">
+            
             <div class="row gallery">
               
             </div>
           </section>
           <!-- Section: Images -->
       </div>
-      
+      <!-- <button type="button" class="btn btn-warning addAllButton" style="display:none;" id="allBtn">Add All</button> -->
+      <button type="button" class="btn btn-warning addAllButton"  id="allBtn">Add All</button>
       
     </body>
 </html>

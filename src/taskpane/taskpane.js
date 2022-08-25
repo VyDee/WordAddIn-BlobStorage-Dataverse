@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 /*
  * Copyright (c) Microsoft Corporation. All rights reserved. Licensed under the MIT license.
  * See LICENSE in the project root for license information.
@@ -7,24 +8,23 @@
 
 Office.onReady((info) => {
   if (info.host === Office.HostType.Word) {
-    //document.getElementById("sideload-msg").style.display = "none";
-    //document.getElementById("app-body").style.display = "flex";
     document.getElementById("searchButton").onclick = run;
+    document.getElementById("allBtn").onclick = addAll;
   }
 });
-/*<div class="col-lg-4 col-md-12 mb-4 mb-lg-0 bg-image hover-overlay ripple shadow-1-strong rounded" data-ripple-color="light">
-    <img
-      src="https://mdbcdn.b-cdn.net/img/screens/yt/screen-video-1.webp"
-      class="w-100"
-    />
-  </div> */
+
 export async function run() {
   return Word.run(async (context) => {
+    document.getElementById("loadingSpinner").classList.add("showAfterPicLoad");
     var componentOrderID = "" + document.getElementById("componentOrderIDInput").value;
-    // insert a paragraph at the end of the document.
+    
+    // generate the photo gallery
     var photoUrls = await getPhotosUrl(componentOrderID);
+
     const outElem = document.querySelector(".gallery");
     outElem.innerHTML = "";
+
+    var itemsProcessed = 0;
 
     photoUrls.forEach(function (path) {
       const imgDiv = document.createElement("div");
@@ -47,7 +47,25 @@ export async function run() {
       };
       imgDiv.appendChild(img);
       outElem.appendChild(imgDiv);
+      itemsProcessed++;
+      if (itemsProcessed === photoUrls.length) {
+        document.getElementById("loadingSpinner").classList.remove("showAfterPicLoad");
+        //document.getElementById("allBtn").classList.add("showAfterPicLoad");
+      }
     });
+
+    await context.sync();
+  });
+}
+
+export async function addAll() {
+  return Word.run(async (context) => {
+    var componentOrderID = "" + document.getElementById("componentOrderIDInput").value;
+    var photoUrls = await getPhotosUrl(componentOrderID);
+
+    for (let i = 0; i < photoUrls.length; i++) {
+      await insertImage(photoUrls[i])    
+    };
 
     await context.sync();
   });
@@ -57,6 +75,7 @@ function toDataURL(src, callback, outputFormat) {
   let image = new Image();
   image.crossOrigin = "Anonymous";
   image.onload = function () {
+    console.log("Onload::toDataURL")
     let canvas = document.createElement("canvas");
     let ctx = canvas.getContext("2d");
     let dataURL;
@@ -67,9 +86,6 @@ function toDataURL(src, callback, outputFormat) {
     callback(dataURL);
   };
   image.src = src;
-  if (image.complete || image.complete === undefined) {
-    image.src = src;
-  }
 }
 
 export async function insertImage(src) {
@@ -80,9 +96,9 @@ export async function insertImage(src) {
         .getLast()
         .insertParagraph("", "After")
         .insertInlinePictureFromBase64(base64Image, "End");
+      
+      context.sync();
     });
-
-    await context.sync();
   });
 }
 

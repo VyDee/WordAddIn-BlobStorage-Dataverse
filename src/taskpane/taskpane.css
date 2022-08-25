@@ -91,3 +91,11 @@ b {
 .gallery > * {
 margin: 1em;
 }
+
+.showAfterPicLoad {display: flex !important;}
+
+.addAllButton {
+    position: fixed !important;
+    bottom: 1% !important;
+    right: 3% !important;
+}
